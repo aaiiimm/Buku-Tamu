@@ -6,25 +6,140 @@
     <title>Buku Tamu Digital Kesehatan Prov Sultra</title>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 500px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto; }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
-        p.subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 14px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
-        input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .signature-wrapper { border: 1px solid #ddd; background: #fafafa; border-radius: 5px; margin-bottom: 15px; position: relative; }
-        canvas { width: 100%; height: 200px; cursor: crosshair; touch-action: none; }
-        .btn-clear { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-bottom: 10px; }
-        .btn-submit { width: 100%; background: #27ae60; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .btn-submit:hover { background: #219150; }
-        .btn-submit:disabled { background: #bdc3c7; cursor: not-allowed; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+        }
+        .container { 
+            max-width: 600px; 
+            width: 100%;
+            background: white; 
+            padding: 40px 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        }
+        
+        /* Header Section */
+        .logo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .logo-left, .logo-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .logo-header img {
+            height: 45px;
+            width: auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title-section h1 {
+            color: #4a7c44; /* Warna hijau sesuai gambar */
+            font-size: 38px;
+            font-style: italic;
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .welcome-text {
+            text-align: center;
+            color: #5f6368;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-top: 25px;
+            padding: 0 20px;
+        }
+
+        /* Form Section */
+        form { margin-top: 30px; }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #333; 
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            background-color: #fff;
+        }
+        
+        /* Signature Section */
+        .signature-wrapper { 
+            border: 1px solid #ccc; 
+            background: #fff; 
+            border-radius: 4px; 
+            margin-bottom: 10px; 
+        }
+        canvas { 
+            width: 100%; 
+            height: 180px; 
+            cursor: crosshair; 
+            touch-action: none; 
+        }
+        .btn-clear { 
+            background: #6c757d; 
+            color: white; 
+            border: none; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 13px; 
+            margin-bottom: 25px;
+        }
+        
+        .btn-submit { 
+            width: 100%; 
+            background: #d9534f; /* Warna merah sesuai gambar */
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-size: 18px; 
+            font-weight: bold;
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+        .btn-submit:hover { background: #c9302c; }
+        .btn-submit:disabled { background: #ccc; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Buku Tamu Digital</h2>
-    <p class="subtitle">Dinas Kesehatan Provinsi Sulawesi Tenggara</p>
+    <div class="logo-header">
+        <div class="logo-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Logo_Germas.png" alt="Logo Germas">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Lambang_Provinsi_Sulawesi_Tenggara.png" alt="Logo Sultra">
+        </div>
+        <div class="logo-right">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Logo_BerAKHLAK.png/640px-Logo_BerAKHLAK.png" alt="BerAKHLAK">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Bangga_Melayani_Bangsa.png/640px-Bangga_Melayani_Bangsa.png" alt="Bangga Melayani Bangsa">
+        </div>
+    </div>
+
+    <div class="title-section">
+        <h1>Buku Tamu<br>Dinas Kesehatan<br>Prov Sultra</h1>
+        <p class="welcome-text">
+            Silakan isi data Anda sebagai tamu yang berkunjung ke Dinas Kesehatan Provinsi Sultra. Terima kasih atas kunjungannya.
+        </p>
+    </div>
     
     <form id="guestForm">
         <label>Nama Lengkap</label>
@@ -39,7 +154,7 @@
         <label>No HP / WA</label>
         <input type="tel" id="hp" placeholder="0812xxxx" required>
 
-        <label>Tanda Tangan / Paraf</label>
+        <label>Tanda-Tangan / Paraf</label>
         <div class="signature-wrapper">
             <canvas id="signature-pad"></canvas>
         </div>
@@ -50,7 +165,6 @@
 </div>
 
 <script>
-    // URL API GOOGLE SCRIPT ANDA
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUAghsnTH-U7t7F_ycVfQHg7ptiZn-11lTVh1l4AXOfGBnfeaqxdVaxWD05H87_j5n/exec";
 
     const canvas = document.getElementById('signature-pad');
@@ -89,7 +203,6 @@
             tandaTangan: signaturePad.toDataURL() 
         };
 
-        // Kirim data ke Google Sheets
         fetch(SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify(data)
@@ -102,7 +215,6 @@
             btn.innerText = "Simpan Kehadiran";
         })
         .catch(error => {
-            console.error('Error!', error.message);
             alert("Terjadi kesalahan saat menyimpan data.");
             btn.disabled = false;
             btn.innerText = "Simpan Kehadiran";
