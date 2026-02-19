@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Tamu Digital Kesehatan Prov Sultra</title>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 500px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
+        p.subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 14px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
+        input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .signature-wrapper { border: 1px solid #ddd; background: #fafafa; border-radius: 5px; margin-bottom: 15px; position: relative; }
+        canvas { width: 100%; height: 200px; cursor: crosshair; touch-action: none; }
+        .btn-clear { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-bottom: 10px; }
+        .btn-submit { width: 100%; background: #27ae60; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .btn-submit:hover { background: #219150; }
+        .btn-submit:disabled { background: #bdc3c7; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Buku Tamu Digital</h2>
+    <p class="subtitle">Dinas Kesehatan Provinsi Sulawesi Tenggara</p>
+    
+    <form id="guestForm">
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+
+        <label>Asal Instansi</label>
+        <input type="text" id="instansi" placeholder="Contoh: Kemenkes RI" required>
+
+        <label>Tujuan Kunjungan</label>
+        <input type="text" id="tujuan" placeholder="Contoh: Koordinasi Program" required>
+
+        <label>No HP / WA</label>
+        <input type="tel" id="hp" placeholder="0812xxxx" required>
+
+        <label>Tanda Tangan / Paraf</label>
+        <div class="signature-wrapper">
+            <canvas id="signature-pad"></canvas>
+        </div>
+        <button type="button" class="btn-clear" id="clear">Hapus Tanda Tangan</button>
+
+        <button type="submit" id="submitBtn" class="btn-submit">Simpan Kehadiran</button>
+    </form>
+</div>
+
+<script>
+    // URL API GOOGLE SCRIPT ANDA
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUAghsnTH-U7t7F_ycVfQHg7ptiZn-11lTVh1l4AXOfGBnfeaqxdVaxWD05H87_j5n/exec";
+
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+    }
+    window.onresize = resizeCanvas;
+    resizeCanvas();
+
+    document.getElementById('clear').addEventListener('click', () => {
+        signaturePad.clear();
+    });
+
+    document.getElementById('guestForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (signaturePad.isEmpty()) {
+            alert("Silakan bubuhkan tanda tangan terlebih dahulu.");
+            return;
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = "Sedang Mengirim...";
+
+        const data = {
+            nama: document.getElementById('nama').value,
+            instansi: document.getElementById('instansi').value,
+            tujuan: document.getElementById('tujuan').value,
+            hp: document.getElementById('hp').value,
+            tandaTangan: signaturePad.toDataURL() 
+        };
+
+        // Kirim data ke Google Sheets
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            alert("Terima kasih " + data.nama + ", data Anda berhasil tersimpan!");
+            document.getElementById('guestForm').reset();
+            signaturePad.clear();
+            btn.disabled = false;
+            btn.innerText = "Simpan Kehadiran";
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert("Terjadi kesalahan saat menyimpan data.");
+            btn.disabled = false;
+            btn.innerText = "Simpan Kehadiran";
+        });
+    });
+</script>
+
+</body>
+</html>
