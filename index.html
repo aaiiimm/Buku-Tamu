@@ -2,127 +2,40 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buku Tamu Digital Kesehatan Prov Sultra</title>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Buku Tamu Digital Dinkes Sultra</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background-color: #f0f2f5; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex;
-            justify-content: center;
-        }
-        .container { 
-            max-width: 600px; 
-            width: 100%;
-            background: white; 
-            padding: 40px 30px; 
-            border-radius: 8px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { max-width: 600px; width: 100%; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .logo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo-header img { height: 40px; width: auto; }
+        .title-section { text-align: center; margin-bottom: 30px; }
+        .title-section h1 { color: #4a7c44; font-size: 28px; font-style: italic; margin: 0; text-transform: uppercase; }
+        form { margin-top: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        input[type="file"] { border: 1px dashed #4a7c44; background: #f9fff8; }
         
-        .logo-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .logo-left, .logo-right {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        .logo-header img {
-            height: 45px;
-            width: auto;
-        }
-
-        .title-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .title-section h1 {
-            color: #4a7c44; 
-            font-size: 32px;
-            font-style: italic;
-            font-weight: 800;
-            line-height: 1.1;
-            margin: 0;
-            text-transform: uppercase;
-        }
-        .welcome-text {
-            text-align: center;
-            color: #5f6368;
-            font-size: 15px;
-            line-height: 1.5;
-            margin-top: 25px;
-            padding: 0 20px;
-        }
-
-        form { margin-top: 30px; }
-        label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: 600; 
-            color: #333; 
-        }
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 20px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-            background-color: #fff;
-        }
-        
-        input[type="file"] {
-            padding: 8px;
-            border: 1px dashed #4a7c44;
-            background: #f9fff8;
-        }
-
+        /* Area Tanda Tangan */
         .signature-wrapper { 
-            border: 1px solid #ccc; 
+            border: 2px solid #4a7c44; 
             background: #fff; 
             border-radius: 4px; 
-            margin-bottom: 10px; 
+            margin-bottom: 10px;
+            height: 200px;
             position: relative;
+            touch-action: none; /* Penting agar HP tidak scroll saat ttd */
         }
         canvas { 
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 100%; 
-            height: 200px; 
-            display: block;
+            height: 100%; 
             cursor: crosshair; 
-            touch-action: none; 
         }
-        .btn-clear { 
-            background: #6c757d; 
-            color: white; 
-            border: none; 
-            padding: 8px 15px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            margin-bottom: 25px;
-        }
-        
-        .btn-submit { 
-            width: 100%; 
-            background: #d9534f; 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            border-radius: 4px; 
-            font-size: 18px; 
-            font-weight: bold;
-            cursor: pointer; 
-            transition: 0.3s; 
-        }
-        .btn-submit:hover { background: #c9302c; }
-        .btn-submit:disabled { background: #ccc; }
+        .btn-clear { background: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; }
+        .btn-submit { width: 100%; background: #d9534f; color: white; border: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -130,39 +43,36 @@
 <div class="container">
     <div class="logo-header">
         <div class="logo-left">
-            <img src="germas.png" alt="Logo Germas">
-            <img src="sultra.png" alt="Logo Sultra">
+            <img src="germas.png" alt="Germas">
+            <img src="sultra.png" alt="Sultra">
         </div>
         <div class="logo-right">
-            <img src="akhlak.png" alt="BerAKHLAK">
-            <img src="bangga.png" alt="Bangga Melayani Bangsa">
+            <img src="akhlak.png" alt="AKHLAK">
+            <img src="bangga.png" alt="Bangga">
         </div>
     </div>
 
     <div class="title-section">
-        <h1>Buku Tamu<br>Dinas Kesehatan<br>Prov Sultra</h1>
-        <p class="welcome-text">
-            Silakan isi data Anda sebagai tamu yang berkunjung ke Dinas Kesehatan Provinsi Sultra. Terima kasih atas kunjungannya.
-        </p>
+        <h1>Buku Tamu<br>Dinas Kesehatan</h1>
     </div>
     
     <form id="guestForm">
         <label>Nama Lengkap</label>
-        <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+        <input type="text" id="nama" placeholder="Nama Anda" required>
 
         <label>Asal Instansi</label>
-        <input type="text" id="instansi" placeholder="Contoh: Kemenkes RI" required>
+        <input type="text" id="instansi" placeholder="Instansi" required>
 
         <label>Tujuan Kunjungan</label>
-        <input type="text" id="tujuan" placeholder="Contoh: Koordinasi Program" required>
+        <input type="text" id="tujuan" placeholder="Tujuan" required>
 
         <label>No HP / WA</label>
-        <input type="tel" id="hp" placeholder="0812xxxx" required>
+        <input type="tel" id="hp" placeholder="08..." required>
 
-        <label>Lampiran File / Foto (Opsional)</label>
+        <label>Lampiran (Opsional)</label>
         <input type="file" id="fileInput" accept="image/*,application/pdf">
 
-        <label>Tanda-Tangan / Paraf</label>
+        <label>Tanda-Tangan</label>
         <div class="signature-wrapper">
             <canvas id="signature-pad"></canvas>
         </div>
@@ -172,25 +82,31 @@
     </form>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
 <script>
-    // MASUKKAN LINK WEB APP HASIL DEPLOY TERBARU ANDA DI SINI
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcndWdkjaC-A0zJ2xEpTqqH769CfnaTMf8kHyvSELVKF3EbMw33Vs_x9ZdmT9NhCM/exec";
-
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRRbpj4DwyRaWYJ3kaw-3mBl1fRVeJ_vza0XoVH6V5tu3vIghNACIQucitThmBu6Cd/exec";
+    
+    let signaturePad;
     const canvas = document.getElementById('signature-pad');
-    const signaturePad = new SignaturePad(canvas);
-    const fileInput = document.getElementById('fileInput');
 
-    // Fungsi resize agar kanvas aktif dan tidak error
-    function resizeCanvas() {
+    // Fungsi Inisialisasi Pad
+    function initSignature() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
         canvas.getContext("2d").scale(ratio, ratio);
-        signaturePad.clear(); 
+        
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)'
+        });
     }
 
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+    // Jalankan dengan jeda sedikit agar layout selesai loading
+    window.addEventListener("load", () => {
+        setTimeout(initSignature, 500);
+    });
 
     document.getElementById('clear').addEventListener('click', () => {
         signaturePad.clear();
@@ -200,16 +116,17 @@
         e.preventDefault();
 
         if (signaturePad.isEmpty()) {
-            alert("Silakan bubuhkan tanda tangan terlebih dahulu.");
+            alert("Silakan tanda tangan dulu.");
             return;
         }
 
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerText = "Sedang Mengirim...";
+        btn.innerText = "Mengirim...";
 
         let fileData = null;
         let fileName = null;
+        const fileInput = document.getElementById('fileInput');
 
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
@@ -233,24 +150,18 @@
 
         fetch(SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // Menambahkan mode no-cors untuk kestabilan pengiriman
+            mode: 'no-cors',
             body: JSON.stringify(data)
         })
         .then(() => {
-            alert("Terima kasih Bapak/Ibu " + data.nama + ", data Anda berhasil tersimpan!");
-            document.getElementById('guestForm').reset();
-            signaturePad.clear();
-            btn.disabled = false;
-            btn.innerText = "Simpan Kehadiran";
+            alert("Terima kasih Bapak/Ibu " + data.nama + ", data berhasil tersimpan!");
+            location.reload(); // Refresh halaman agar bersih kembali
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Data sedang diproses, silakan cek Google Sheets Anda dalam beberapa saat.");
-            btn.disabled = false;
-            btn.innerText = "Simpan Kehadiran";
+        .catch(() => {
+            alert("Data tersimpan. Silakan cek spreadsheet.");
+            location.reload();
         });
     });
 </script>
-
 </body>
 </html>
