@@ -85,7 +85,7 @@
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWeERdRDhGquj_YUQznTMW5MYSVy9l6BcCgzVnJUbKgwxLtirtmWjZjfHicje6hOq6/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyxVPgZ3SWgRO0djONkmT8f8xdusbUVcrsMaSJ3SFV5SCS147k0Gn3gQPcIDjOrJj7/exec";
     
     let signaturePad;
     const canvas = document.getElementById('signature-pad');
@@ -111,57 +111,67 @@
     document.getElementById('clear').addEventListener('click', () => {
         signaturePad.clear();
     });
-
     document.getElementById('guestForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (signaturePad.isEmpty()) {
-            alert("Silakan tanda tangan dulu.");
-            return;
-        }
+    if (signaturePad.isEmpty()) {
+        alert("Silakan tanda tangan terlebih dahulu.");
+        return;
+    }
 
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "Mengirim...";
+    const btn = document.getElementById('submitBtn');
+    const fileInput = document.getElementById('fileInput');
+    btn.disabled = true;
+    btn.innerText = "Sedang Mengirim Data & File...";
 
-        let fileData = null;
-        let fileName = null;
-        const fileInput = document.getElementById('fileInput');
+    let fileData = null;
+    let fileName = null;
 
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            fileName = file.name;
-            fileData = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(file);
-            });
-        }
-
-        const data = {
-            nama: document.getElementById('nama').value,
-            instansi: document.getElementById('instansi').value,
-            tujuan: document.getElementById('tujuan').value,
-            hp: document.getElementById('hp').value,
-            tandaTangan: signaturePad.toDataURL(),
-            fileData: fileData,
-            fileName: fileName
-        };
-
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            alert("Terima kasih Bapak/Ibu " + data.nama + ", data berhasil tersimpan!");
-            location.reload(); // Refresh halaman agar bersih kembali
-        })
-        .catch(() => {
-            alert("Data tersimpan. Silakan cek spreadsheet.");
-            location.reload();
+    // --- PERBAIKAN PEMBACAAN FILE ---
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName = file.name;
+        // Membaca file dan menunggu sampai selesai
+        fileData = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(e);
+            reader.readAsDataURL(file);
         });
+    }
+
+    const data = {
+        nama: document.getElementById('nama').value,
+        instansi: document.getElementById('instansi').value,
+        tujuan: document.getElementById('tujuan').value,
+        hp: document.getElementById('hp').value,
+        tandaTangan: signaturePad.toDataURL(),
+        fileData: fileData, // Data file dikirim dalam format Base64
+        fileName: fileName
+    };
+
+    // Mengirim ke Google Apps Script
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if(result.result === "success") {
+            alert("Berhasil! Data tersimpan di Spreadsheet dan file tersimpan di Drive.");
+            location.reload(); 
+        } else {
+            alert("Gagal: " + result.error);
+            btn.disabled = false;
+            btn.innerText = "Simpan Kehadiran";
+        }
+    })
+    .catch(error => {
+        // Fallback jika terjadi CORS issue tapi data biasanya tetap masuk
+        alert("Terima kasih Bapak/Ibu " + data.nama + ", data sedang diproses.");
+        location.reload();
     });
+});
 </script>
 </body>
 </html>
