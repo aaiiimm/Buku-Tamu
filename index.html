@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buku Tamu Digital Kesehatan Prov Sultra</title>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="https://script.google.com/macros/s/AKfycbzRRbpj4DwyRaWYJ3kaw-3mBl1fRVeJ_vza0XoVH6V5tu3vIghNACIQucitThmBu6Cd/exec"></script>
     <style>
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -23,7 +23,6 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
         }
         
-        /* Header Section */
         .logo-header {
             display: flex;
             justify-content: space-between;
@@ -45,8 +44,8 @@
             margin-bottom: 40px;
         }
         .title-section h1 {
-            color: #4a7c44; /* Warna hijau sesuai gambar */
-            font-size: 38px;
+            color: #4a7c44; 
+            font-size: 32px;
             font-style: italic;
             font-weight: 800;
             line-height: 1.1;
@@ -56,13 +55,12 @@
         .welcome-text {
             text-align: center;
             color: #5f6368;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.5;
             margin-top: 25px;
             padding: 0 20px;
         }
 
-        /* Form Section */
         form { margin-top: 30px; }
         label { 
             display: block; 
@@ -80,7 +78,13 @@
             background-color: #fff;
         }
         
-        /* Signature Section */
+        /* Style khusus untuk input file */
+        input[type="file"] {
+            padding: 8px;
+            border: 1px dashed #4a7c44;
+            background: #f9fff8;
+        }
+
         .signature-wrapper { 
             border: 1px solid #ccc; 
             background: #fff; 
@@ -106,7 +110,7 @@
         
         .btn-submit { 
             width: 100%; 
-            background: #d9534f; /* Warna merah sesuai gambar */
+            background: #d9534f; 
             color: white; 
             border: none; 
             padding: 15px; 
@@ -154,6 +158,9 @@
         <label>No HP / WA</label>
         <input type="tel" id="hp" placeholder="0812xxxx" required>
 
+        <label>Lampiran File / Foto (Opsional)</label>
+        <input type="file" id="fileInput" accept="image/*,application/pdf">
+
         <label>Tanda-Tangan / Paraf</label>
         <div class="signature-wrapper">
             <canvas id="signature-pad"></canvas>
@@ -165,10 +172,12 @@
 </div>
 
 <script>
+    // GANTI URL DI BAWAH INI DENGAN LINK WEB APP BARU ANDA JIKA PERLU
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRRbpj4DwyRaWYJ3kaw-3mBl1fRVeJ_vza0XoVH6V5tu3vIghNACIQucitThmBu6Cd/exec";
 
     const canvas = document.getElementById('signature-pad');
     const signaturePad = new SignaturePad(canvas);
+    const fileInput = document.getElementById('fileInput');
 
     function resizeCanvas() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -183,7 +192,7 @@
         signaturePad.clear();
     });
 
-    document.getElementById('guestForm').addEventListener('submit', function(e) {
+    document.getElementById('guestForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         if (signaturePad.isEmpty()) {
@@ -195,12 +204,28 @@
         btn.disabled = true;
         btn.innerText = "Sedang Mengirim...";
 
+        let fileData = null;
+        let fileName = null;
+
+        // Logika membaca file jika ada
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            fileName = file.name;
+            fileData = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
         const data = {
             nama: document.getElementById('nama').value,
             instansi: document.getElementById('instansi').value,
             tujuan: document.getElementById('tujuan').value,
             hp: document.getElementById('hp').value,
-            tandaTangan: signaturePad.toDataURL() 
+            tandaTangan: signaturePad.toDataURL(),
+            fileData: fileData,
+            fileName: fileName
         };
 
         fetch(SCRIPT_URL, {
@@ -224,8 +249,3 @@
 
 </body>
 </html>
-
-
-
-
-
